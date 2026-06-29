@@ -40,7 +40,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
 // Organizador - RF-04, RF-05, RF-06, RF-07
-Route::prefix('organizer')->middleware('auth.session')->group(function () {
+Route::prefix('organizer')->middleware(['auth.session', 'organizer'])->group(function () {
     Route::get('/events', [OrganizerController::class, 'index'])->name('organizer.events');
     Route::get('/events/create', [OrganizerController::class, 'create'])->name('organizer.create');
     Route::post('/events', [OrganizerController::class, 'store'])->name('organizer.store');
@@ -51,7 +51,7 @@ Route::prefix('organizer')->middleware('auth.session')->group(function () {
 });
 
 // Admin - RF-16, RF-17, RF-18, RF-19, RF-20
-Route::prefix('admin')->middleware('auth.session')->group(function () {
+Route::prefix('admin')->middleware(['auth.session', 'admin'])->group(function () {
     // Organizadores
     Route::get('/organizers', [AdminController::class, 'organizers'])->name('admin.organizers');
     Route::get('/organizers/create', [AdminController::class, 'createOrganizer'])->name('admin.create-organizer');

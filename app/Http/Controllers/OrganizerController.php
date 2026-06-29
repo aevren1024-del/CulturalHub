@@ -8,16 +8,6 @@ use Illuminate\Http\Request;
 
 class OrganizerController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware(function ($request, $next) {
-            if (session('role') !== 'organizer' && session('role') !== 'admin') {
-                return redirect('/dashboard');
-            }
-            return $next($request);
-        });
-    }
-
     public function index()
     {
         $events = Event::where('organizer_id', session('user_id'))

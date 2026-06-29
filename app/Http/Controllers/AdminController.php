@@ -9,16 +9,6 @@ use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware(function ($request, $next) {
-            if (session('role') !== 'admin') {
-                return redirect('/dashboard');
-            }
-            return $next($request);
-        });
-    }
-
     // RF-20: Admin consulta ORGANIZADORES
     public function organizers()
     {
