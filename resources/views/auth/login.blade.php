@@ -11,7 +11,6 @@
     <div class="row justify-content-center">
         <div class="col-md-5 col-lg-4">
 
-            {{-- Logo y título centrado --}}
             <div class="text-center mb-4">
                 <div style="font-size:2.5rem;color:var(--accent-red);"><i class="bi bi-music-note-beamed"></i></div>
                 <h2 style="font-weight:700;color:var(--text-dark);">Iniciar Sesión</h2>
@@ -19,7 +18,7 @@
             </div>
 
             <div class="form-box">
-                <form method="POST" action="/login" class="needs-validation" novalidate>
+                <form method="POST" action="/login" novalidate>
                     @csrf
 
                     <div class="mb-3">
@@ -29,8 +28,9 @@
                                value="{{ old('email') }}"
                                placeholder="tu@correo.com"
                                required autocomplete="email">
-                        @error('email')<div class="invalid-feedback">{{ $message }}</div>@enderror
-                        <div class="invalid-feedback">Ingresa un correo válido.</div>
+                        <div class="invalid-feedback">
+                            @error('email'){{ $message }}@else Ingresa un correo válido.@enderror
+                        </div>
                     </div>
 
                     <div class="mb-4">
@@ -39,8 +39,9 @@
                                class="form-control @error('password') is-invalid @enderror"
                                placeholder="Tu contraseña"
                                required autocomplete="current-password">
-                        @error('password')<div class="invalid-feedback">{{ $message }}</div>@enderror
-                        <div class="invalid-feedback">La contraseña es obligatoria.</div>
+                        <div class="invalid-feedback">
+                            @error('password'){{ $message }}@else La contraseña es obligatoria.@enderror
+                        </div>
                     </div>
 
                     <button type="submit" class="btn-primary-custom w-100 justify-content-center mb-3">

@@ -10,94 +10,103 @@
 // Esperamos a que el HTML esté completamente cargado
 document.addEventListener('DOMContentLoaded', function () {
 
-    // --- 1. VALIDACIÓN DE FORMULARIOS (RNF-US-03) ---
-    // Buscamos todos los formularios que tengan la clase 'needs-validation'
-    var forms = document.querySelectorAll('.needs-validation');
+    // --- 1. VALIDACIÓN DE FORMULARIOS ---
+    var forms = document.querySelectorAll('form[novalidate]');
 
-    // Recorremos cada formulario encontrado
     forms.forEach(function (form) {
+        var fields = form.querySelectorAll('input, select, textarea');
 
-        // Escuchamos el evento 'submit' (cuando el usuario hace clic en Enviar)
-        form.addEventListener('submit', function (evento) {
-
-            // checkValidity() es una función nativa del navegador que
-            // revisa todos los campos con el atributo 'required'
-            // Devuelve false si algún campo está vacío o inválido
-            if (!form.checkValidity()) {
-
-                // Cancelamos el envío del formulario
-                evento.preventDefault();
-                evento.stopPropagation();
+        // Guardar qué campos ya tenían error del servidor al cargar
+        var serverErrors = new Set();
+        fields.forEach(function (field) {
+            if (field.classList.contains('is-invalid')) {
+                serverErrors.add(field.id || field.name);
             }
+        });
 
-            // Bootstrap usa la clase 'was-validated' para mostrar
-            // los mensajes de error y resaltar los campos en rojo
-            form.classList.add('was-validated');
+        // Al abandonar un campo: validar solo ese campo
+        fields.forEach(function (field) {
+            field.addEventListener('blur', function () {
+                validateField(field);
+            });
+
+            // Mientras escribe: si ya estaba en rojo, re-evaluar
+            field.addEventListener('input', function () {
+                if (field.classList.contains('is-invalid')) {
+                    validateField(field);
+                }
+            });
+        });
+
+        // Al enviar: validar todos
+        form.addEventListener('submit', function (e) {
+            var valid = true;
+            fields.forEach(function (field) {
+                if (!validateField(field)) {
+                    valid = false;
+                }
+            });
+            if (!valid) {
+                e.preventDefault();
+                e.stopPropagation();
+                // Hacer scroll al primer campo inválido
+                var first = form.querySelector('.is-invalid');
+                if (first) first.focus();
+            }
         });
     });
 
+    function validateField(field) {
+        // Ignorar campos ocultos o deshabilitados
+        if (field.type === 'hidden' || field.disabled) return true;
 
-    // --- 2. CUPOS EN TIEMPO REAL (RNF-AF-03) ---
-    // Buscamos el elemento que muestra los cupos disponibles
+        if (!field.checkValidity()) {
+            field.classList.add('is-invalid');
+            field.classList.remove('is-valid');
+            return false;
+        } else {
+            field.classList.remove('is-invalid');
+            // Solo agregar is-valid si el campo tiene valor (no marcar vacíos opcionales de verde)
+            if (field.value.trim() !== '' || field.required) {
+                field.classList.add('is-valid');
+            }
+            return true;
+        }
+    }
+
+
+    // --- 2. CUPOS EN TIEMPO REAL ---
     var cuposEl = document.querySelector('[data-cupos]');
-
     if (cuposEl) {
-        // Leemos los datos del atributo HTML data-cupos y data-capacity
         var cupos    = parseInt(cuposEl.dataset.cupos)    || 0;
         var capacity = parseInt(cuposEl.dataset.capacity) || 1;
-
-        // Quitamos todas las clases de color anteriores
         cuposEl.classList.remove('cupos-mucho', 'cupos-pocos', 'cupos-ninguno');
-
-        // Añadimos la clase correcta según la disponibilidad
         if (cupos <= 0) {
-            // Sin cupos: clase roja
             cuposEl.classList.add('cupos-ninguno');
         } else if (cupos / capacity < 0.3) {
-            // Menos del 30% disponible: clase amarilla (alerta)
             cuposEl.classList.add('cupos-pocos');
         } else {
-            // Muchos cupos: clase verde
             cuposEl.classList.add('cupos-mucho');
         }
     }
 
 
     // --- 3. AUTO-CERRAR ALERTAS DESPUÉS DE 4 SEGUNDOS ---
-    // Las alertas de éxito desaparecen solas para no molestar
     var alertas = document.querySelectorAll('.alert-success, .alert-info');
-
     alertas.forEach(function (alerta) {
-
-        // setTimeout ejecuta la función después de 4000ms = 4 segundos
         setTimeout(function () {
-
-            // Hacemos la alerta transparente con una transición suave
             alerta.style.transition = 'opacity 0.5s ease';
             alerta.style.opacity = '0';
-
-            // Después de que termine la animación (0.5s), la removemos del DOM
-            setTimeout(function () {
-                alerta.remove();
-            }, 500);
-
+            setTimeout(function () { alerta.remove(); }, 500);
         }, 4000);
     });
 
 
-    // --- 4. CONFIRMAR ELIMINACIÓN (RF-07, RF-18) ---
-    // Buscamos todos los botones o formularios con data-confirm
+    // --- 4. CONFIRMAR ELIMINACIÓN ---
     var deleteButtons = document.querySelectorAll('[data-confirm]');
-
     deleteButtons.forEach(function (btn) {
-
         btn.addEventListener('click', function (e) {
-
-            // Leemos el mensaje de confirmación del atributo data-confirm
             var mensaje = this.dataset.confirm || '¿Estás seguro? Esta acción no se puede deshacer.';
-
-            // confirm() abre un diálogo nativo del navegador
-            // Si el usuario hace clic en "Cancelar", prevenimos la acción
             if (!confirm(mensaje)) {
                 e.preventDefault();
             }
@@ -105,18 +114,12 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
 
-    // --- 5. LAZY LOADING DE IMÁGENES (RNF-ED-02) ---
-    // Solo cargamos imágenes cuando el usuario las va a ver
+    // --- 5. LAZY LOADING DE IMÁGENES ---
     if ('IntersectionObserver' in window) {
-
         var imagenes = document.querySelectorAll('img[data-src]');
-
         var observer = new IntersectionObserver(function (entries) {
-
             entries.forEach(function (entry) {
-
                 if (entry.isIntersecting) {
-                    // El elemento es visible: cargamos la imagen real
                     var img = entry.target;
                     img.src = img.dataset.src;
                     img.removeAttribute('data-src');
@@ -124,17 +127,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             });
         });
-
-        imagenes.forEach(function (img) {
-            observer.observe(img);
-        });
+        imagenes.forEach(function (img) { observer.observe(img); });
     }
 
-}); // Fin de DOMContentLoaded
+});
 
-
-// --- FUNCIÓN GLOBAL: Confirmar acción peligrosa ---
-// Se puede llamar desde cualquier formulario con onsubmit="return confirmar()"
 function confirmar(mensaje) {
     mensaje = mensaje || '¿Estás seguro? Esta acción no se puede deshacer.';
     return confirm(mensaje);

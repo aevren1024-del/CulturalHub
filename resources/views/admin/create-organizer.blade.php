@@ -43,8 +43,9 @@
                                value="{{ old('name') }}"
                                placeholder="Ej: Teatro Los Fundadores"
                                required>
-                        @error('name')<div class="invalid-feedback">{{ $message }}</div>@enderror
-                        <div class="invalid-feedback">El nombre es obligatorio (solo letras).</div>
+                        <div class="invalid-feedback">
+                            @error('name'){{ $message }}@else El nombre es obligatorio (solo letras).@enderror
+                        </div>
                     </div>
 
                     <div class="mb-3">
@@ -54,8 +55,9 @@
                                value="{{ old('email') }}"
                                placeholder="organizador@correo.com"
                                required>
-                        @error('email')<div class="invalid-feedback">{{ $message }}</div>@enderror
-                        <div class="invalid-feedback">Ingresa un correo válido.</div>
+                        <div class="invalid-feedback">
+                            @error('email'){{ $message }}@else Ingresa un correo válido.@enderror
+                        </div>
                     </div>
 
                     <div class="mb-3">
@@ -64,8 +66,9 @@
                                class="form-control @error('password') is-invalid @enderror"
                                placeholder="Mínimo 8 caracteres, mayúscula, número y símbolo"
                                required minlength="8">
-                        @error('password')<div class="invalid-feedback">{{ $message }}</div>@enderror
-                        <div class="invalid-feedback">La contraseña debe tener mínimo 8 caracteres.</div>
+                        <div class="invalid-feedback">
+                            @error('password'){{ $message }}@else La contraseña debe tener mínimo 8 caracteres.@enderror
+                        </div>
                     </div>
 
                     <div class="mb-4">

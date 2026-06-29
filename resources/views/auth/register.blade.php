@@ -27,7 +27,7 @@
                     </div>
                 @endif
 
-                <form method="POST" action="/register" class="needs-validation" novalidate>
+                <form method="POST" action="/register" novalidate>
                     @csrf
 
                     <div class="mb-3">
@@ -37,8 +37,9 @@
                                value="{{ old('name') }}"
                                placeholder="Tu nombre y apellido"
                                required>
-                        @error('name')<div class="invalid-feedback">{{ $message }}</div>@enderror
-                        <div class="invalid-feedback">El nombre es obligatorio (solo letras).</div>
+                        <div class="invalid-feedback">
+                            @error('name'){{ $message }}@else El nombre es obligatorio (solo letras).@enderror
+                        </div>
                     </div>
 
                     <div class="mb-3">
@@ -48,8 +49,9 @@
                                value="{{ old('email') }}"
                                placeholder="tu@correo.com"
                                required>
-                        @error('email')<div class="invalid-feedback">{{ $message }}</div>@enderror
-                        <div class="invalid-feedback">Ingresa un correo válido.</div>
+                        <div class="invalid-feedback">
+                            @error('email'){{ $message }}@else Ingresa un correo válido.@enderror
+                        </div>
                     </div>
 
                     <div class="mb-3">
@@ -58,8 +60,9 @@
                                class="form-control @error('password') is-invalid @enderror"
                                placeholder="Mín. 8 caracteres, mayúscula, número y símbolo"
                                required minlength="8">
-                        @error('password')<div class="invalid-feedback">{{ $message }}</div>@enderror
-                        <div class="invalid-feedback">Mínimo 8 caracteres.</div>
+                        <div class="invalid-feedback">
+                            @error('password'){{ $message }}@else Mínimo 8 caracteres.@enderror
+                        </div>
                     </div>
 
                     <div class="mb-4">
