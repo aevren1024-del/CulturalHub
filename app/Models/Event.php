@@ -16,9 +16,12 @@ class Event extends Model
         'organizer_id',
     ];
 
-    protected $dates = [
-        'date',
-    ];
+    protected function casts(): array 
+    {
+        return[
+            'date' => 'datetime',
+        ];
+    }
 
     public function category()
     {
