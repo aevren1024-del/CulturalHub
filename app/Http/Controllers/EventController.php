@@ -12,17 +12,19 @@ class EventController extends Controller
     {
         $query = Event::where('date', '>=', now())->with('category', 'organizer');
 
-        if ($request->has('search')) {
+        if ($request->filled('search')) {
             $search = $request->get('search');
-            $query->where('title', 'like', "%$search%")
-                  ->orWhere('description', 'like', "%$search%");
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', "%$search%")
+                ->orWhere('description', 'like', "%$search%");
+            });
         }
 
-        if ($request->has('category') && $request->get('category')) {
+        if ($request->filled('category')) {
             $query->where('category_id', $request->get('category'));
         }
 
-        $events = $query->paginate(12);
+        $events = $query->orderBy('date')->paginate(12);
         $categories = Category::all();
 
         return view('events.index', compact('events', 'categories'));

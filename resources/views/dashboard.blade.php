@@ -21,33 +21,43 @@
 
     {{-- Tarjetas de estadísticas (imagen 3) --}}
     <div class="row g-3 mb-4">
+        {{-- Tarjeta clicable: Categorías → va a /admin/categories --}}
         <div class="col-6 col-md-3">
-            <div class="stat-card">
-                <div class="stat-icon stat-icon-red"><i class="bi bi-tags"></i></div>
-                <div>
-                    <div class="stat-number">{{ \App\Models\Category::count() }}</div>
-                    <div class="stat-label">Categorias</div>
+            <a href="/admin/categories" class="text-decoration-none">
+                <div class="stat-card" style="cursor:pointer; transition: box-shadow 0.2s;" onmouseover="this.style.boxShadow='0 4px 16px rgba(0,0,0,0.12)'" onmouseout="this.style.boxShadow=''">
+                    <div class="stat-icon stat-icon-red"><i class="bi bi-tags"></i></div>
+                    <div>
+                        <div class="stat-number">{{ \App\Models\Category::count() }}</div>
+                        <div class="stat-label">Categorias</div>
+                    </div>
                 </div>
-            </div>
+            </a>
         </div>
+        {{-- Tarjeta clicable: Organizadores → va a /admin/organizers --}}
         <div class="col-6 col-md-3">
-            <div class="stat-card">
-                <div class="stat-icon stat-icon-orange"><i class="bi bi-person-badge"></i></div>
-                <div>
-                    <div class="stat-number">{{ \App\Models\User::where('role','organizer')->count() }}</div>
-                    <div class="stat-label">Organizadores</div>
+            <a href="/admin/organizers" class="text-decoration-none">
+                <div class="stat-card" style="cursor:pointer; transition: box-shadow 0.2s;" onmouseover="this.style.boxShadow='0 4px 16px rgba(0,0,0,0.12)'" onmouseout="this.style.boxShadow=''">
+                    <div class="stat-icon stat-icon-orange"><i class="bi bi-person-badge"></i></div>
+                    <div>
+                        <div class="stat-number">{{ \App\Models\User::where('role','organizer')->count() }}</div>
+                        <div class="stat-label">Organizadores</div>
+                    </div>
                 </div>
-            </div>
+            </a>
         </div>
+        {{-- Tarjeta clicable: Eventos → va a /events --}}
         <div class="col-6 col-md-3">
-            <div class="stat-card">
-                <div class="stat-icon stat-icon-blue"><i class="bi bi-calendar-event"></i></div>
-                <div>
-                    <div class="stat-number">{{ \App\Models\Event::count() }}</div>
-                    <div class="stat-label">Eventos</div>
+            <a href="/events" class="text-decoration-none">
+                <div class="stat-card" style="cursor:pointer; transition: box-shadow 0.2s;" onmouseover="this.style.boxShadow='0 4px 16px rgba(0,0,0,0.12)'" onmouseout="this.style.boxShadow=''">
+                    <div class="stat-icon stat-icon-blue"><i class="bi bi-calendar-event"></i></div>
+                    <div>
+                        <div class="stat-number">{{ \App\Models\Event::count() }}</div>
+                        <div class="stat-label">Eventos</div>
+                    </div>
                 </div>
-            </div>
+            </a>
         </div>
+        {{-- Tarjeta: Inscripciones (sin enlace, solo estadística) --}}
         <div class="col-6 col-md-3">
             <div class="stat-card">
                 <div class="stat-icon stat-icon-green"><i class="bi bi-people"></i></div>
@@ -57,6 +67,7 @@
                 </div>
             </div>
         </div>
+         
     </div>
 
     {{-- Tarjetas de acceso rápido (imagen 3) --}}

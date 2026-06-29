@@ -45,9 +45,11 @@
             </select>
         </div>
 
-        {{-- Botón buscar (también se activa con Enter) --}}
-        <div class="col-md-1">
-            <button type="submit" class="btn-primary-custom w-100 justify-content-center">
+        {{-- Botón buscar --}}
+        <div class="col-12 col-md-1">
+            <button type="submit"
+                    class="btn-primary-custom w-100 justify-content-center"
+                    style="z-index: 10; position: relative;">
                 <i class="bi bi-search"></i>
             </button>
         </div>
@@ -84,7 +86,7 @@
         @endif
 
             <div class="col-sm-6 col-lg-4">
-                <div class="event-card">
+                <div class="event-card" style="position: relative;">
 
                     {{-- Área de imagen con fondo oscuro e ícono --}}
                     <div class="event-card-img">
@@ -128,7 +130,7 @@
                     </div>
 
                     {{-- Enlace de detalle cubre toda la tarjeta --}}
-                    <a href="/events/{{ $event->id }}"
+                    <a href="{{ route('events.show', $event->id) }}"
                        class="stretched-link"
                        aria-label="Ver detalles de {{ $event->title }}"></a>
 
