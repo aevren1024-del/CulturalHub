@@ -28,8 +28,8 @@
 
     <div class="panel-card">
         <div class="table-responsive">
-            <table class="table table-dark-header mb-0">
-                <thead>
+            <table class="table mb-0">
+                <thead class="text-dark">
                     <tr>
                         <th>#</th>
                         <th>NOMBRE</th>

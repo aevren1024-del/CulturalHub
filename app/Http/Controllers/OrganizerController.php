@@ -23,6 +23,14 @@ class OrganizerController extends Controller
         return view('organizer.create', compact('categories'));
     }
 
+    public function show($id)
+    {
+        $event = Event::findOrFail($id);
+        $this->authorize($event);
+        return redirect()->route('organizer.events')
+            ->with('success', 'Evento actualizado');
+    }
+
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -44,7 +52,8 @@ class OrganizerController extends Controller
             'organizer_id' => session('user_id'),
         ]);
 
-        return redirect("/organizer/events/$event->id")->with('success', 'Evento creado');
+        return redirect()->route('organizer.events')
+            ->with('success', 'Evento creado');
     }
 
     public function edit($id)

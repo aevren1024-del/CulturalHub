@@ -44,15 +44,16 @@
         <div class="collapse navbar-collapse" id="navMenu">
 
             {{-- Enlace central: Eventos --}}
+            {{-- CUMPLE: RNF-US01 (menú disponible en todas las páginas) --}}
             <ul class="navbar-nav me-auto ms-3">
                 <li class="nav-item">
-                    {{-- Enlace al catálogo público de eventos --}}
+                    {{-- Enlace al catálogo público de eventos (RF-08) --}}
                     <a class="nav-link" href="/events">
                         <i class="bi bi-calendar-event me-1"></i>Eventos
                     </a>
                 </li>
 
-                {{-- Enlace "Mi panel" solo para organizadores --}}
+                {{-- Enlace "Mi panel" solo para organizadores (RF-05) --}}
                 @if(session('role') === 'organizer')
                     <li class="nav-item">
                         <a class="nav-link" href="/organizer/events">
@@ -61,7 +62,7 @@
                     </li>
                 @endif
 
-                {{-- Enlace "Administracion" solo para admins --}}
+                {{-- Enlace "Administracion" solo para admins (RF-19, RF-20) --}}
                 @if(session('role') === 'admin')
                     <li class="nav-item">
                         <a class="nav-link" href="/dashboard">
@@ -69,18 +70,33 @@
                         </a>
                     </li>
                 @endif
+
+                {{-- NUEVO: Enlace "Mi panel" para visitantes --}}
+                @if(session('role') === 'visitor')
+                    <li class="nav-item">
+                        <a class="nav-link" href="/dashboard">
+                            <i class="bi bi-person-circle me-1"></i>Mi panel
+                        </a>
+                    </li>
+                @endif
             </ul>
 
-            {{-- Sección derecha del navbar: usuario o login/registro --}}
-            <ul class="navbar-nav align-items-center gap-2">
+            {{-- Sección derecha del navbar: usuario autenticado o botones guest --}}
+            {{-- ms-auto empuja esta sección a la derecha en desktop                --}}
+            {{-- En móvil (collapse abierto) se muestra debajo del menú izquierdo   --}}
+            <ul class="navbar-nav ms-auto align-items-lg-center gap-2 mt-2 mt-lg-0">
 
                 @if(session('user_id'))
                     {{-- Usuario logueado: mostramos nombre, badge de rol y botón Salir --}}
 
-                    {{-- Nombre del usuario (gris claro) --}}
+                    {{-- Nombre del usuario (visible solo en desktop) --}}
                     <li class="nav-item">
                         <span class="navbar-username d-none d-lg-inline">
                             {{ session('user')->name }}
+                        </span>
+                        {{-- En móvil mostramos el nombre como nav-link para que se vea en el menú desplegado --}}
+                        <span class="nav-link d-lg-none" style="color:#ccc; font-size:0.88rem;">
+                            <i class="bi bi-person-circle me-1"></i>{{ session('user')->name }}
                         </span>
                     </li>
 
@@ -124,6 +140,7 @@
                     </li>
 
                 @endif
+
             </ul>
 
         </div>

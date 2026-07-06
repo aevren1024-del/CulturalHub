@@ -2,34 +2,29 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Event;
-use App\Models\User;
-use App\Models\Category;
 use App\Models\Registration;
-use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
     public function index()
     {
-        // Si no hay sesión activa, redirigir al login
+        // Si no hay sesión activa, redirigir al login (RNF-SE01)
         if (!session('user_id')) {
             return redirect('/login');
         }
 
-        // Para ADMIN y ORGANIZER: redirigir a sus paneles específicos
+        // Organizador: redirigir a su panel de gestión de eventos (RF-05)
         if (session('role') === 'organizer') {
             return redirect('/organizer/events');
         }
 
-        // Para ADMIN: cargamos estadísticas globales del sistema
-        // Para VISITANTE: cargamos sus inscripciones (RF-14)
+        // Visitante: cargar historial de inscripciones (RF-14)
         $registrations = Registration::where('user_id', session('user_id'))
             ->with(['event.category'])
             ->orderByDesc('created_at')
             ->get();
 
-        // Contamos eventos totales e inscripciones próximas
+        // Contadores para el panel del visitante
         $totalEvents    = $registrations->count();
         $upcomingEvents = $registrations->filter(fn($r) => $r->event && $r->event->date > now())->count();
 
